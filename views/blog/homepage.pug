@@ -1,0 +1,45 @@
+extends ../layout
+
+block content
+  div#alert-container
+  div.row.col-lg-9
+
+    div#map.lol
+  .page-header.col-lg-3
+    h3 What's new?
+    div
+      .col-sm-3
+         button.btn.btn-primary(
+         onclick='addStory()'
+         ) Add Story
+  div#modal.modal.fade
+    div.modal-dialog
+      div.modal-content
+        div.modal-header#formAdd
+          Add Add your post
+            div.modal-body#leftText
+                form.form-horizontal(action='/addPost' method='POST')
+                    input(type='hidden', name='_csrf', value=_csrf)
+                    input(id='location-input' type='hidden' name='location')
+                    .form-group
+                        label.col-sm-3.control-label(for='caption') Title:
+                        .col-sm-7
+                            input.form-control(type='text', name='title', id='#title-input', autofocus, required)
+                    .form-group
+                        label.col-sm-3.control-label#descriptionCenter(for='caption') Description:
+                        .col-sm-7
+                            textarea(name='body')
+                    .form-group
+                        label.col-sm-3.control-label(for='location') Location:
+                        .col-sm-7
+                            span#location(type='text' name='span-loc' readonly)
+                    hr
+                    .row
+                      .col-lg-8                       
+                      .col-lg-2
+                        button.btn.btn-default(type='button', data-dismiss='modal') Close
+                      .col-lg-2
+                        button.btn.btn-primary(type='submit') Post
+                
+  script(src='/js/blog.js')
+  script(async, defer, src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaAMlbzbVtJOgWBWJQn8TKOQO7zweH2IA&callback=initMap")

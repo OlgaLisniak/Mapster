@@ -1,0 +1,54 @@
+extends ../layout
+
+block content
+  div#alert-container
+  div.row.mt-5(style="width: 85%; margin: 0 auto")
+    h1.text-center My posts
+    div#post-preview
+    - if(posts.length > 0){
+        each post in posts
+          .post#post
+            h3.text-center#postTitle=post.title
+            span.text-center#spanTitle=post.body
+            br
+            button.btn.btn-primary.btn-change-post#buttonPost(
+              data-post=post
+            ) Edit post
+    - } else {
+         h3.text-center It seems you should post some 
+          a(href='/blog') new stories
+    - }
+  div#modal-change-post.modal.fade
+    div.modal-dialog
+      div.modal-content
+        div.modal-header#headerPost
+          h2.text-center#EditPost Edit post
+        div.modal-body
+          form.form-horizontal(action='/updatePost' method='POST')
+            input(type='hidden', name='_csrf', value=_csrf)
+            input(type='hidden', name='postID' id='postID')
+            .form-group
+              label.col-sm-3.control-label(for='caption') New title
+              .col-sm-7
+                input.form-control(type='text', name='title', id='title-new', autofocus, required)
+                br
+            .form-group
+              label.col-sm-3.control-label(for='caption') New Description
+              .col-sm-7
+                textarea(name='body' id='body-new')
+                br
+            button.btn.btn-default(type='button', data-dismiss='modal') Close
+            button.btn.btn-primary(type='submit') Update post
+
+    script.
+      $(document).ready(function() {
+          $('button.btn-change-post').click(function(){
+            let post = JSON.parse($(this).attr('data-post'));
+
+            $('#title-new').val(post.title);
+            $('#postID').val(post._id);
+            $('#body-new').text(post.body);
+            $('#modal-change-post').modal('show');
+          });
+        });
+    script(src='/js/blog.js')

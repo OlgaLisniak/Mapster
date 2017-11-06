@@ -1,0 +1,33 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='theme-color' content='#4DA5F4')
+    meta(name='csrf-token', content=_csrf)
+    title #{title}
+    link(rel='icon', href='/favicon.png')
+    link(rel='stylesheet', href='/css/main.css')
+    link(rel='stylesheet', href='/css/mainMy.css')
+    script(src='/js/lib/jquery-3.1.1.min.js')
+  body
+    include partials/header
+
+    .container
+      include partials/flash
+      block content
+
+    include partials/footer
+
+            style(type="text/css").
+                #hellopreloader>p{display:none;}#hellopreloader_preload{display: block;position: fixed;z-index: 99999;top: 0;left: 0;width: 100%;height: 100%;min-width: 1000px;background: #9A12B3 url(http://hello-site.ru//main/images/preloads/grid.svg) center center no-repeat;background-size:155px;}
+            #hellopreloader
+                #hellopreloader_preload
+                p
+                    a(href="http://hello-site.ru") Hello-Site.ru. Бесплатный конструктор сайтов.
+            script(type="text/javascript").
+                var hellopreloader = document.getElementById("hellopreloader_preload");function fadeOutnojquery(el){el.style.opacity = 1;var interhellopreloader = setInterval(function(){el.style.opacity = el.style.opacity - 0.05;if (el.style.opacity <=0.05){ clearInterval(interhellopreloader);hellopreloader.style.display = "none";}},16);}window.onload = function(){setTimeout(function(){fadeOutnojquery(hellopreloader);},800);};
+
+    script(src='/js/lib/bootstrap.min.js')
+    script(src='/js/main.js')

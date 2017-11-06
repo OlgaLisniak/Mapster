@@ -1,0 +1,84 @@
+extends layout
+
+block content
+  .row.text-center
+    h1.mt-0 Mapster
+    p.lead Place where you can share your thoughts
+    hr
+  .row
+    
+    div#map.col-lg-9
+    hr
+    script.
+        var neighborhoods = [
+            {lat: 48.467741, lng: 35.042407},
+            {lat: 48.457806, lng: 35.055367},
+            {lat: 48.464760, lng: 35.070788},
+            {lat: 48.451891, lng: 35.076066},
+            {lat: 48.448237, lng: 35.095574},
+            {lat: 48.529107, lng: 35.030922},
+            {lat: 48.462296, lng: 34.998847},
+            {lat: 48.460610, lng: 35.041221},
+            {lat: 48.448977, lng: 35.028988},
+            {lat: 48.463378, lng: 35.028454}
+        ];
+        var titlehoods = [
+            "Первый",
+            "Второй",
+            "Третий",
+            "Четвертый",
+            "Буль",
+            "Ashan",
+            "Второй",
+            "Третий",
+            "Четвертый",
+            "Буль"
+        ];
+
+        var markers = [];
+        var map;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: {lat: 48.468592, lng: 35.049832}
+            });
+            drop();
+        }
+
+        window.onload = drop;
+
+        function drop() {
+            clearMarkers();
+            for (var i = 0; i < neighborhoods.length; i++) {
+                addMarkerWithTimeout(neighborhoods[i], titlehoods[i], i * 200);
+            }
+        }
+
+        function addMarkerWithTimeout(position, title, timeout) {
+            window.setTimeout(function () {
+                markers.push(new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    animation: google.maps.Animation.DROP,
+                    title: title
+                }));
+            }, timeout);
+        }
+
+        function clearMarkers() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            markers = [];
+        }
+
+    script(async, defer, src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaAMlbzbVtJOgWBWJQn8TKOQO7zweH2IA&callback=initMap")
+    script(src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js")
+                                                                            
+
+    .row.text-center.col-lg-3
+      h2 Hello, friend!
+      p Welcome to our blogging service
+      p
+        a.btn.btn-default(href='/blog', role='button') View all entries »

@@ -1,0 +1,111 @@
+extends layout
+
+block content
+  .page-header
+    h3.text-center All users
+
+  table.table-bordered#usersTable(style="margin: 0 auto; width: 80%")
+    thead
+      tr
+        th.text-center Name
+        th.text-center Email
+        th.text-center Date
+        th.text-center Post Title 
+        th.text-center Post Status
+        th.text-center Action
+    tbody
+      each user in users       
+          tr     
+            td(rowspan=user.posts.length+1 class='text-center')=user.username
+              td(rowspan=user.posts.length+1 class='text-center')=user.email
+                - if(user.posts.length>0) {
+                    each post in user.posts
+                      tr
+                        td.text-center=post.postedAt
+                        td.text-center.postTitle=post.title
+                        -if(post.active === true) {
+                          td.text-center="active"
+                        -}
+                        -else {
+                          td.text-center="disactive"
+                        -}
+                        td 
+                          button.btn.btn-primary.btn-block.showPost(                      
+                            data-toogle="modal"
+                            data-target='#modal'
+                            data-post=post
+                            data-user=user
+                            data-username = user.username
+                          )  Show Post
+                - }
+                - else {
+                    td.text-center &mdash;
+                    td.text-center &mdash;
+                    td.text-center &mdash;
+                    td.text-center &mdash;
+                - }
+
+  script.
+
+    $(document).ready(function() {
+      $('button.showPost').click(function(){
+        let post = JSON.parse($(this).attr('data-post'));
+        let user = JSON.parse($(this).attr('data-user'));
+
+        let location = post.location;
+
+        $('#postID-input').val(post._id);
+        $('#postStatus-input').val(post.active);
+        $('#username').text($(this).attr('data-username'));
+        $('#title-input').val(post.title);
+        $('#body-input').text(post.body);
+        $('#coord-input').val(`{ lng: ${location.lat}, lat: ${location.lng} }`);
+
+        $('#action').attr('data-post-id', post._id);
+        $('#action').attr('data-user-id', user._id);
+        $('#action').attr('data-post-status', post.active);
+
+        $('#modal').modal('show');
+      });
+    });
+    
+    
+  div#modal.modal
+      div.modal-dialog
+        div.modal-content
+          form.form-horizontal
+            div.modal-header
+            div.modal-body
+              input(type='hidden', name='_csrf', value=_csrf)
+              .form-group
+                  h2.text-center Posted
+                  label.col-sm-3.control-label(for='title') Title:
+                  .col-sm-7
+                    input.form-control(type='text', name='title', id='title-input', readonly)
+              .form-group
+                label.col-sm-3.control-label(for='body') Body:
+                .col-sm-7
+                  textarea(id='body-input' name='body', readonly)
+              .form-group
+                label.col-sm-3.control-label(for='coord') Coordinates:
+                .col-sm-7
+                  input(id='coord-input' name='coord', readonly)        
+            div.modal-footer
+              button.btn.btn-default(type='button', data-dismiss='modal') Close 
+              button.btn.btn-primary(id='action', class='action') Activate/Deactivate
+  
+  script.
+    $(document).ready(function() {
+      $('.action').click(function() {
+        let idPost = $(this).attr('data-post-id');
+        let idUser = $(this).attr('data-user-id');
+        let statusPost = $(this).attr('data-post-status');
+        $.get('/changePostStatus', {id: idPost, userID:idUser, postStatus:statusPost}, (data, status) => {
+          $('#usersTable').html(data);
+        });
+      });
+    });
+
+
+         
+
